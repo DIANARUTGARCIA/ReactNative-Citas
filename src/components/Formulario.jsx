@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import DatePicker from 'react-native-date-picker';
 import {
   Alert,
@@ -12,19 +12,21 @@ import {
   View,
 } from 'react-native';
 
-type Props = {
-  modalVisible: boolean;
-  pacientes: any;
-  setPacientes: any;
-  onLongPress: () => void;
-  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-};
+// type Props = {
+//   modalVisible: boolean;
+//   pacientes: any;
+//   setPacientes: any;
+//   onLongPress: () => void;
+//   paciente: any;
+// };
 
-const Formulario: FC<Props> = ({
+const Formulario = ({
   modalVisible,
-  setModalVisible,
+  cerrarModal,
   pacientes,
   setPacientes,
+  paciente: pacienteObj,
+  setPaciente: setPacienteApp,
 }) => {
   const [id, setId] = useState('');
   const [paciente, setPaciente] = useState('');
@@ -34,14 +36,26 @@ const Formulario: FC<Props> = ({
   const [fecha, setFecha] = useState(new Date());
   const [sintomas, setSintomas] = useState('');
 
+  useEffect(() => {
+    if (Object.keys(pacienteObj).length > 0) {
+      setId(pacienteObj.id);
+      setPaciente(pacienteObj.paciente);
+      setPropietario(pacienteObj.propietario);
+      setEmail(pacienteObj.email);
+      setTelefono(pacienteObj.telefono);
+      setFecha(pacienteObj.fecha);
+      setSintomas(pacienteObj.sintomas);
+    }
+  }, [pacienteObj]);
+
   const handleCita = () => {
     // Validar
     if ([paciente, propietario, email, fecha, sintomas].includes('')) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
+    //Todo Revisar si es un registro nuevo
     const nuevoPaciente = {
-      id: new Date(),
       paciente,
       propietario,
       email,
@@ -49,9 +63,22 @@ const Formulario: FC<Props> = ({
       fecha,
       sintomas,
     };
-    setPacientes([...pacientes, nuevoPaciente]);
-    setModalVisible(!modalVisible);
 
+    if (id) {
+      nuevoPaciente.id = id;
+
+      const pacientesActualizados = pacientes.map(pacienteState =>
+        pacienteState.id === nuevoPaciente.id ? nuevoPaciente : pacienteState,
+      );
+      setPacientes(pacientesActualizados);
+      setPacienteApp({});
+    } else {
+      nuevoPaciente.id = Date.now();
+      setPacientes([...pacientes, nuevoPaciente]);
+    }
+
+    cerrarModal();
+    setId('');
     setPaciente('');
     setPropietario('');
     setEmail('');
@@ -64,9 +91,14 @@ const Formulario: FC<Props> = ({
     <Modal animationType="slide" visible={modalVisible}>
       <SafeAreaView style={styles.contenido}>
         <ScrollView>
+          <Text style={styles.titulo}>
+            {pacienteObj.id ? 'Editar' : 'Nueva'}{' '}
+            <Text style={styles.tituloBold}>Cita</Text>
+          </Text>
           <Pressable
             style={styles.btnCancelar}
             onLongPress={() => {
+              cerrarModal();
               setId('');
               setPaciente('');
               setPropietario('');
@@ -74,7 +106,6 @@ const Formulario: FC<Props> = ({
               setTelefono('');
               setFecha(new Date());
               setSintomas('');
-              setModalVisible(!modalVisible);
             }}
           >
             <Text style={styles.btnCancelarTexto}>X Cancelar</Text>
@@ -153,7 +184,7 @@ const Formulario: FC<Props> = ({
 
           <Pressable style={styles.btnNuevaCita} onPress={handleCita}>
             <Text style={styles.btnNuevaCitaTexto}>
-              {/* {pacienteObj.id ? 'Editar' : 'Agregar'} Paciente */} paciente
+              {pacienteObj.id ? 'Editar' : 'Agregar'} Paciente
             </Text>
           </Pressable>
         </ScrollView>
@@ -171,7 +202,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     marginTop: 30,
-    color: '#FFF',
+    color: '#5827A4',
   },
   tituloBold: {
     fontWeight: '900',
@@ -221,7 +252,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   btnNuevaCitaTexto: {
-    color: '#5827A4',
+    color: '#fff',
     textAlign: 'center',
     fontWeight: '900',
     fontSize: 16,
