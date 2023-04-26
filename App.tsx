@@ -28,14 +28,15 @@ function App(): JSX.Element {
         <Text style={styles.btnTexto}>Nueva Cita</Text>
       </Pressable>
       {
-        pacientes.length === 0 ?
-        <Text style={styles.noPacientes}>No hay pacientes aúm</Text>
-        :
+        pacientes.length === 0 ? (
+          <Text style={styles.noPacientes}>No hay pacientes aúm</Text>
+        ) : (
+          <Text>holaa</Text>
+        )
+        // <FlatList data={pacientes} keyExtractor={(item)=> item.id}
+        // renderItem={()=>{
 
-        <FlatList data={pacientes} keyExtractor={(item)=> item.id}
-        renderItem={()=>{
-          
-        }} />
+        // }} />
       }
       <Formulario
         modalVisible={modalVisible}
@@ -78,9 +79,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     textTransform: 'uppercase',
   },
-  noPacientes:{
-
-  }
+  noPacientes: {},
 });
 
 export default App;
