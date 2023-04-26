@@ -10,7 +10,7 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native/types';
+} from 'react-native';
 
 type Props = {
   modalVisible: boolean;
@@ -59,7 +59,7 @@ const Formulario: FC<Props> = ({
 
   return (
     <Modal animationType="slide" visible={modalVisible}>
-      <SafeAreaView>
+      <SafeAreaView style={styles.contenido}>
         <ScrollView>
           <Pressable
             style={styles.btnCancelar}
@@ -71,6 +71,7 @@ const Formulario: FC<Props> = ({
               setTelefono('');
               setFecha(new Date());
               setSintomas('');
+              setModalVisible(!modalVisible);
             }}
           >
             <Text style={styles.btnCancelarTexto}>X Cancelar</Text>
@@ -159,7 +160,7 @@ const Formulario: FC<Props> = ({
 };
 const styles = StyleSheet.create({
   contenido: {
-    backgroundColor: '#6D28D9',
+    backgroundColor: '#F2F2F4',
     flex: 1,
   },
   titulo: {
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   label: {
-    color: '#FFF',
+    color: '#000',
     marginBottom: 10,
     marginTop: 15,
     fontSize: 20,
