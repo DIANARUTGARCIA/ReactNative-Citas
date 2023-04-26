@@ -41,6 +41,7 @@ const Formulario: FC<Props> = ({
       return;
     }
     const nuevoPaciente = {
+      id: new Date(),
       paciente,
       propietario,
       email,
@@ -48,13 +49,15 @@ const Formulario: FC<Props> = ({
       fecha,
       sintomas,
     };
-    setPacientes('');
+    setPacientes([...pacientes, nuevoPaciente]);
+    setModalVisible(!modalVisible);
+
+    setPaciente('');
     setPropietario('');
     setEmail('');
     setTelefono('');
     setFecha(new Date());
     setSintomas('');
-    setModalVisible(!modalVisible);
   };
 
   return (

@@ -9,8 +9,9 @@ import {
   FlatList,
 } from 'react-native';
 import Formulario from './src/components/Formulario';
+import Paciente from './src/components/Paciente';
 
-function App(): JSX.Element {
+function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [pacientes, setPacientes] = useState([]);
 
@@ -27,17 +28,18 @@ function App(): JSX.Element {
       >
         <Text style={styles.btnTexto}>Nueva Cita</Text>
       </Pressable>
-      {
-        pacientes.length === 0 ? (
-          <Text style={styles.noPacientes}>No hay pacientes aúm</Text>
-        ) : (
-          <Text>holaa</Text>
-        )
-        // <FlatList data={pacientes} keyExtractor={(item)=> item.id}
-        // renderItem={()=>{
-
-        // }} />
-      }
+      {pacientes.length === 0 ? (
+        <Text style={styles.noPacientes}>No hay pacientes aún</Text>
+      ) : (
+        <FlatList
+          style={styles.listado}
+          data={pacientes}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => {
+            return <Paciente item={item} />;
+          }}
+        />
+      )}
       <Formulario
         modalVisible={modalVisible}
         onLongPress={() => setModalVisible(false)}
@@ -79,7 +81,16 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     textTransform: 'uppercase',
   },
-  noPacientes: {},
+  noPacientes: {
+    marginTop: 40,
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  listado: {
+    marginTop: 50,
+    marginHorizontal: 30,
+  },
 });
 
 export default App;
