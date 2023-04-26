@@ -26,7 +26,7 @@ function App() {
 
   const pacienteEliminar = id => {
     Alert.alert(
-      '¿Deseas eliminat este paciente?',
+      '¿Deseas eliminar este paciente?',
       'Un paciente eliminado no se puede recuperar',
       [
         {text: 'Cancelar'},
